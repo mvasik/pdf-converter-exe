@@ -1,0 +1,66 @@
+
+import comtypes.client
+import os
+from inspect import getsourcefile
+ 
+
+
+def doc_to_pdf(input_file_path,output_file_path):
+    # Create a COM object for Microsoft Word
+    word = comtypes.client.CreateObject('Word.Application')
+
+    # Open the input file
+    doc = word.Documents.Open(input_file_path)
+
+    # Save the file as pdf
+    doc.SaveAs(output_file_path, FileFormat=17)
+
+    # Close the document and quit Word
+    doc.Close()
+    word.Quit()
+
+
+def pptx_to_pdf(input_path, output_path):
+    powerpoint = comtypes.client.CreateObject("Powerpoint.Application")
+    powerpoint.Visible = 1
+
+    deck = powerpoint.Presentations.Open(input_path)
+    deck.SaveAs(output_path, 32) # 32 is the PDF file format code
+
+    deck.Close()
+    powerpoint.Quit()
+
+
+
+
+
+
+# folder_path = r"C:\Users\mvasik\Desktop\HATAY\PYTHON"  # Replace with your folder path
+
+folder_path=os.getcwd()
+
+
+
+# List all files in folder
+files = os.listdir(folder_path)
+
+
+# Filter for .docm files and return directory path of first match
+docm_files = [f for f in files if f.endswith('.docm')]
+
+
+
+pptx_files = [f for f in files if f.endswith('.pptx')]
+
+
+
+
+if len(docm_files)>0:
+    docm_file = os.path.join(folder_path, docm_files[0])
+    pdf_of_docm=docm_file[:-5]+".pdf"
+    doc_to_pdf(docm_file,pdf_of_docm)
+if len(pptx_files)>0:
+    pptx_file = os.path.join(folder_path,pptx_files[0])
+    pdf_of_pptx=pptx_file[:-5]+".pdf"
+    pptx_to_pdf(pptx_file,pdf_of_pptx)
+
